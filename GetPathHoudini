@@ -1,0 +1,17 @@
+import hou
+import os
+from PySide2 import QtWidgets
+
+# Obtenir le répertoire du projet actuel
+currentproject = os.path.dirname(hou.hipFile.path())
+pathToTextures = hou.ui.selectFile(file_type=hou.fileType.Directory,
+                                    start_directory=os.path.dirname(os.path.dirname(os.path.dirname(currentproject))),
+                                    title="Select the texture folder")
+
+# Copier le chemin dans le presse-papier
+app = QtWidgets.QApplication.instance()
+clipboard = app.clipboard()
+clipboard.setText(pathToTextures)
+
+# Afficher un message pour confirmer la copie
+QtWidgets.QMessageBox.information(None, "Information", f"Le chemin du dossier de la scène en cours a été copié dans le presse-papier : {pathToTextures}")
