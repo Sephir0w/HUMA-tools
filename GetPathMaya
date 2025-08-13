@@ -1,0 +1,18 @@
+import maya.cmds as cmds
+from PySide2 import QtWidgets
+import os
+
+# Obtenir le chemin de la scène Maya actuelle
+chemin_scene = cmds.file(q=True, sceneName=True)
+
+if chemin_scene:
+    # Reculer de quelques niveaux dans le chemin
+    chemin_modifie = os.path.dirname
+
+    # Accéder au presse-papiers via PySide2
+    clipboard = QtWidgets.QApplication.clipboard()
+    clipboard.setText(chemin_scene)
+    
+    print("Le chemin modifié a été copié dans le presse-papiers : {}".format(chemin_scene))
+else:
+    print("Aucune scène ouverte ou non enregistrée.")
