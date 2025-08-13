@@ -1,0 +1,21 @@
+import hou
+
+selected_nodes = hou.selectedNodes()
+
+for node in selected_nodes:
+    filename_parm = node.parm('filename')
+    
+    if filename_parm is not None:
+        filename = filename_parm.eval()
+
+        if filename:
+            if filename.endswith('.tex'):
+                print(f"Le fichier '{filename}' contient déjà '.tex'.")
+            else:
+                filename += ".tex"
+                filename_parm.set(filename)
+                print(f"Le nom de fichier a été mis à jour à: {filename}")
+        else:
+            print("Le paramètre 'filename' est vide.")
+    else:
+        print(f"Le nœud {node.name()} ne contient pas de paramètre 'filename'.")
