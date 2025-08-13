@@ -1,0 +1,42 @@
+@echo off
+setlocal
+
+echo Nettoyage complet des fichiers temporaires...
+
+:: 1. Nettoyage du dossier Temp utilisateur
+echo Suppression dans %%temp%%
+del /f /s /q "%temp%\*.*" >nul 2>&1
+for /d %%x in ("%temp%\*") do rd /s /q "%%x" >nul 2>&1
+
+:: 2. Nettoyage du dossier Temp système
+echo Suppression dans C:\Windows\Temp
+del /f /s /q "C:\Windows\Temp\*.*" >nul 2>&1
+for /d %%x in ("C:\Windows\Temp\*") do rd /s /q "%%x" >nul 2>&1
+
+:: 3. Nettoyage des fichiers temporaires Windows Update
+echo Nettoyage de C:\Windows\SoftwareDistribution\Download
+del /f /s /q "C:\Windows\SoftwareDistribution\Download\*.*" >nul 2>&1
+for /d %%x in ("C:\Windows\SoftwareDistribution\Download\*") do rd /s /q "%%x" >nul 2>&1
+
+:: 4. Nettoyage du dossier TEMP dans ProgramData (parfois utilisé)
+echo Nettoyage de C:\ProgramData\Temp
+del /f /s /q "C:\ProgramData\Temp\*.*" >nul 2>&1
+for /d %%x in ("C:\ProgramData\Temp\*") do rd /s /q "%%x" >nul 2>&1
+
+:: 5. Nettoyage des dossiers temporaires des profils utilisateurs (tous utilisateurs)
+echo Nettoyage des dossiers TEMP dans C:\Users
+for /d %%u in ("C:\Users\*") do (
+    if exist "%%u\AppData\Local\Temp" (
+        echo Nettoyage dans %%u\AppData\Local\Temp
+        del /f /s /q "%%u\AppData\Local\Temp\*.*" >nul 2>&1
+        for /d %%x in ("%%u\AppData\Local\Temp\*") do rd /s /q "%%x" >nul 2>&1
+    )
+)
+
+:: 6. Vider la corbeille (via PowerShell)
+echo Vidage de la corbeille...
+powershell -command "Clear-RecycleBin -Force" >nul 2>&1
+
+echo Nettoyage terminé.
+pause
+endlocal
